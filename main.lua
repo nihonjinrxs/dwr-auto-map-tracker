@@ -28,7 +28,12 @@ DWRAutoMapTracker.Trackables = {
     ap = { label = "AP", address = 0xCC, bytes = 1 },
     dp = { label = "DP", address = 0xCD, bytes = 1 },
     tileset = { label = "tile set", address = 0x16, bytes = 1 },
-    items = { label = "items", address = 0x00C1, bytes = 4 },
+    items = { label = "Items", address = 0x00C1, bytes = 4 },
+    spells = { label = "Spells", address = 0x00CE, bytes = 1 },
+    quest = { label = "Quest Progress", address = 0x00CF, bytes = 1 },
+    quest2 = { label = "- not displayed -", address = 0x00DF, bytes = 1 },
+    quest3 = { label = "- not displayed -", address = 0x00E4, bytes = 1 },
+    equipment = { label = "Equipment", address = 0x00BE, bytes = 1 },
 }
 DWRAutoMapTracker.TrackedValues = {}
 

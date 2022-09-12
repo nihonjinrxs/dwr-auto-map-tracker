@@ -53,8 +53,37 @@ local items = {
     "Herb",               -- 0xF
 }
 
+local weapons = {
+    [0x20] = "Bamboo Pole",
+    [0x40] = "Club",
+    [0x60] = "Copper Sword",
+    [0x80] = "Hand Axe",
+    [0xA0] = "Broad Sword",
+    [0xC0] = "Flame Sword",
+    [0xE0] = "Erdrick's Sword",
+}
+
+local armor  = {
+    [0x04] = "Clothes",
+    [0x08] = "Leather Armor",
+    [0x0C] = "Chain Mail",
+    [0x10] = "Half Plate Armor",
+    [0x14] = "Full Plate Armor",
+    [0x18] = "Magic Armor",
+    [0x1C] = "Erdrick's Armor",
+}
+
+local shields = {
+    [0x01] = "Small Shield",
+    [0x02] = "Large Shield",
+    [0x03] = "Silver Shield",
+}
+
 return {
     nonParseables = nonParseables,
     maps = maps,
     items = items,
+    weapons = weapons,
+    armor = armor,
+    shields = shields,
 }
