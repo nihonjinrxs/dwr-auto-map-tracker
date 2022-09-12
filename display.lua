@@ -7,12 +7,19 @@ local function generatePrintables(TrackedValues)
         return printables
     end
     local orderedKeys = {
-        "map", "level", "xp", "hp", "mp", "strength", "agility", "ap", "dp", "gold", "keys",
+        "map", "level", "xp", "hp", "mp", "strength", "agility", "ap", "dp", "gold", "keys", "items",
     }
     for i, key in ipairs(orderedKeys) do
         local value = TrackedValues[key]
         if value.parsedValue then
-            table.insert(printables, value.label..": "..value.parsedValue)
+            if type(value.parsedValue) == "string" or type(value.parsedValue) == "number" then
+                table.insert(printables, value.label..": "..value.parsedValue)
+            else
+                table.insert(printables, value.label..":")
+                for i,val in ipairs(value.parsedValue) do
+                    table.insert(printables, "  - "..val)
+                end
+            end
         end
     end
     return printables

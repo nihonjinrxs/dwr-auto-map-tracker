@@ -35,7 +35,26 @@ local maps = {
     [0x1D] = "Erdrick's Cave B2",
 }
 
+local items = {
+    "Torch",              -- 0x1
+    "Fairy Water",        -- 0x2
+    "Wings",              -- 0x3
+    "Dragon's Scale",     -- 0x4
+    "Fairy Flute",        -- 0x5
+    "Fighter's Ring",     -- 0x6
+    "Erdrick's Token",    -- 0x7
+    "Gwaelin's Love",     -- 0x8
+    "Cursed Belt",        -- 0x9
+    "Silver Harp",        -- 0xA
+    "Death Necklace",     -- 0xB
+    "Stones of Sunlight", -- 0xC
+    "Staff of Rain",      -- 0xD
+    "Rainbow Drop",       -- 0xE
+    "Herb",               -- 0xF
+}
+
 return {
     nonParseables = nonParseables,
     maps = maps,
+    items = items,
 }

@@ -3,6 +3,7 @@
         "memory",
         "emu",
         "rom",
-        "gui"
+        "gui",
+        "bit"
     ]
 }
