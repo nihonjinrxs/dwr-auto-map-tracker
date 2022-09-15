@@ -7,10 +7,7 @@ local function generatePrintables(TrackedValues)
         return printables
     end
     local orderedKeys = {
-        "map", "level", "xp", "hp", "mp",
-        "strength", "agility", "ap", "dp",
-        "gold", "keys", "equipment",
-        "items", "spells", "quest",
+        "map", "hero",
     }
     for i, key in ipairs(orderedKeys) do
         local value = TrackedValues[key]

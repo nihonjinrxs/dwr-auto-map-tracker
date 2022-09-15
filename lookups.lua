@@ -36,21 +36,21 @@ local maps = {
 }
 
 local items = {
-    "Torch",              -- 0x1
-    "Fairy Water",        -- 0x2
-    "Wings",              -- 0x3
-    "Dragon's Scale",     -- 0x4
-    "Fairy Flute",        -- 0x5
-    "Fighter's Ring",     -- 0x6
-    "Erdrick's Token",    -- 0x7
-    "Gwaelin's Love",     -- 0x8
-    "Cursed Belt",        -- 0x9
-    "Silver Harp",        -- 0xA
-    "Death Necklace",     -- 0xB
-    "Stones of Sunlight", -- 0xC
-    "Staff of Rain",      -- 0xD
-    "Rainbow Drop",       -- 0xE
-    "Herb",               -- 0xF
+    "torch",              -- 0x1
+    "fairy_water",        -- 0x2
+    "wings",              -- 0x3
+    "dragon_scale",       -- 0x4
+    "fairy_flute",        -- 0x5
+    "fighter_ring",       -- 0x6
+    "erdrick_token",      -- 0x7
+    "gwaelin_love",       -- 0x8
+    "cursed_belt",        -- 0x9
+    "silver_harp",        -- 0xA
+    "death_necklace",     -- 0xB
+    "stones_of_sunlight", -- 0xC
+    "staff_of_rain",      -- 0xD
+    "rainbow_drop",       -- 0xE
+    "herb_glitched",      -- 0xF
 }
 
 local weapons = {
