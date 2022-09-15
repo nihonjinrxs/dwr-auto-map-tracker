@@ -4,7 +4,7 @@ _G.DWRAutoMapTracker = {}
 emu.speedmode("normal")
 
 local game = require "game"
-local parsers = require "parsers"
+local data = require "data"
 local display = require "display"
 -- local tracker_gui = require "tracker_gui"
 
@@ -15,11 +15,12 @@ DWRAutoMapTracker.TrackedValues = {}
 -- DWRAutoMapTracker.UI = tracker_gui.initUI()
 
 -- Start emulator loop
+local dataTable = data.Data
 while true do
     game.updateTracked(DWRAutoMapTracker.Trackables, DWRAutoMapTracker.TrackedValues)
-    parsers.parseAll(DWRAutoMapTracker.TrackedValues)
-    display.displayOSD(DWRAutoMapTracker.TrackedValues)
-    -- display.logValues(DWRAutoMapTracker.TrackedValues)
+    data.updateData(DWRAutoMapTracker.TrackedValues, dataTable)
+    display.displayOSD(dataTable)
+    -- display.logValues(dataTable)
 
     emu.frameadvance()
 end

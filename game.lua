@@ -26,6 +26,19 @@ local Trackables = {
     equipment = { label = "Equipment", address = 0x00BE, bytes = 1 },
 }
 
+-- Screen is 0-255 in X, 0-239 in Y, but NTSC only displays 8-231 of Y
+local screenMinX = 0
+local screenMinY = 8
+local screenMaxX = 255
+local screenMaxY = 231
+
+local function getROMInfo()
+    return {
+        filename = rom.getfilename(),
+        hash = rom.gethash("md5")
+    }
+end
+
 -- Functions for updating memory state
 local function readTrackableFromMemory(trackable)
     if (trackable.bytes == 1) then 
@@ -56,4 +69,11 @@ end
 return {
     Trackables = Trackables,
     updateTracked = updateTracked,
+    screenDimensions = {
+        minX = screenMinX,
+        maxX = screenMaxX,
+        minY = screenMinY,
+        maxY = screenMaxY
+    },
+    getROMInfo = getROMInfo
 }

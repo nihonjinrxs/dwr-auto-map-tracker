@@ -1,15 +1,7 @@
 local lookups = require "lookups"
 
-local function noParse(byteValue)
-    return byteValue
-end
-
 local function parseMap(mapByte)
     return lookups.maps[mapByte]
-end
-
-local function parseWithMax(valueByte, maxByte)
-    return string.format("%d / %d", valueByte, maxByte)
 end
 
 local function parseStats(TrackedValues)
@@ -28,34 +20,11 @@ local function parseStats(TrackedValues)
 end
 
 local function parseEquipment(valueByte)
-    local equipment = {
-        weapon = nil, armor = nil, shield = nil,
+    return {
+        weapon = valueByte and lookups.weapons[bit.band(224, valueByte)] or nil,
+        armor = valueByte and lookups.armor[bit.band(28, valueByte)] or nil,
+        shield = valueByte and lookups.shields[bit.band(3, valueByte)] or nil,
     }
-    if (valueByte) then
-        equipment.weapon = lookups.weapons[bit.band(224, valueByte)]
-        equipment.armor = lookups.armor[bit.band(28, valueByte)]
-        equipment.shield = lookups.shields[bit.band(3, valueByte)]
-    end
-
-    return equipment
-end
-
-local function parseQuestItems(itemBytes)
-    local quest_items = {
-        dragon_scale = false,
-        fighter_ring = false,
-        death_necklace = false,
-        gwaelin_love = false,
-        erdrick_token = false,
-        silver_harp = false,
-        fairy_flute = false,
-        stones_of_sunlight = false,
-        staff_of_rain = false,
-        rainbow_drop = false,
-        ball_of_light = false,
-    }
-
-    return quest_items
 end
 
 local function getItemsFromBytes(itemBytes)
@@ -99,7 +68,7 @@ local function getItemsFromBytes(itemBytes)
     return working
 end
 
-local function parseItems(itemBytes, keysByte)
+local function parseAllItems(itemBytes, keysByte)
     local item_set = getItemsFromBytes(itemBytes)
     local quest_items = {
         dragon_scale = item_set.dragon_scale > 0,
@@ -129,122 +98,60 @@ local function parseItems(itemBytes, keysByte)
     }
 end
 
-local function parseSpells(byte1, byte2)
-    local spells = {
-        HEAL = false,
-        HURT = false,
-        SLEEP = false,
-        RADIANT = false,
-        STOPSPELL = false,
-        OUTSIDE = false,
-        RETURN = false,
-        REPEL = false,
-        HEALMORE = false,
-        HURTMORE = false,
-    }
-    if byte1 and byte2 then
-        spells.HEAL = bit.band(0x01, byte1) > 0
-        spells.HURT = bit.band(0x02, byte1) > 0
-        spells.SLEEP = bit.band(0x04, byte1) > 0
-        spells.RADIANT = bit.band(0x08, byte1) > 0
-        spells.STOPSPELL = bit.band(0x10, byte1) > 0
-        spells.OUTSIDE = bit.band(0x20, byte1) > 0
-        spells.RETURN = bit.band(0x40, byte1) > 0
-        spells.REPEL = bit.band(0x80, byte1) > 0
-        spells.HEALMORE = bit.band(0x01, byte2) > 0
-        spells.HURTMORE = bit.band(0x02, byte2) > 0
-    end
+local function parseQuestItems(itemBytes)
+    local all_items = parseAllItems(itemBytes, 0)
+    return all_items.items
+end
 
-    print("Parsed spells: "..tostring(spells))
-    return spells
+local function parseItems(itemBytes, keysByte)
+    local all_items = parseAllItems(itemBytes, keysByte)
+    return all_items.quest_items
+end
+
+local function parseSpells(byte1, byte2)
+    return {
+        HEAL = byte1 and bit.band(0x01, byte1) > 0 or false,
+        HURT = byte1 and bit.band(0x02, byte1) > 0 or false,
+        SLEEP = byte1 and bit.band(0x04, byte1) > 0 or false,
+        RADIANT = byte1 and bit.band(0x08, byte1) > 0 or false,
+        STOPSPELL = byte1 and bit.band(0x10, byte1) > 0 or false,
+        OUTSIDE = byte1 and bit.band(0x20, byte1) > 0 or false,
+        RETURN = byte1 and bit.band(0x40, byte1) > 0 or false,
+        REPEL = byte1 and bit.band(0x80, byte1) > 0 or false,
+        HEALMORE = byte2 and bit.band(0x01, byte2) > 0 or false,
+        HURTMORE = byte2 and bit.band(0x02, byte2) > 0 or false,
+    }
 end
 
 local function parseEquipped(byteValue)
-    local equipped = {
-        dragon_scale = false,
-        figher_ring = false,
-        cursed_belt = false,
-        death_necklace = false,
+    return {
+        dragon_scale = byteValue and bit.band(16, byteValue) > 0 or false,
+        figher_ring = byteValue and bit.band(32, byteValue) > 0 or false,
+        cursed_belt = byteValue and bit.band(64, byteValue) > 0 or false,
+        death_necklace = byteValue and bit.band(128, byteValue) > 0 or false,
     }
-    if (byteValue) then
-        equipped.dragon_scale = bit.band(16, byteValue) > 0
-        equipped.fighter_ring =  bit.band(32, byteValue) > 0
-        equipped.cursed_belt = bit.band(64, byteValue) > 0
-        equipped.death_necklace = bit.band(128, byteValue) > 0
-    end
-    return equipped
 end
 
-local function parseQuestProgress(byte1, byte2, byte3)
-    local questProgress = {}
-
-    if bit.band(4, byte1) > 0 then
-        table.insert(questProgress, "Charlock Hidden Stairs")
-    end
-    if bit.band(8, byte1) > 0 then
-        table.insert(questProgress, "Rainbow Bridge")
-    end
-    if bit.band(1, byte2) > 0 then
-        table.insert(questProgress, "Rescued Princess")
-    end
-    if bit.band(2, byte2) > 0 then
-        table.insert(questProgress, "Returned Princess")
-    end
-    if bit.band(8, byte2) > 0 then
-        table.insert(questProgress, "Left Throne Room")
-    end
-    if bit.band(2, byte3) > 0 then
-        table.insert(questProgress, "Killed Golem Trap")
-    end
-    if bit.band(4, byte3) > 0 then
-        table.insert(questProgress, "Killed Dragonlord")
-    end
-    if bit.band(64, byte3) > 0 then
-        table.insert(questProgress, "Killed Green Dragon Trap")
-    end
-
-    print("Parsed quest progress: "..tostring(questProgress))
-    return questProgress
-end
-
-local function parseAll(TrackedValues)
-    for i,name in ipairs(lookups.nonParseables) do
-        if TrackedValues[name].memValue then
-            TrackedValues[name].parsedValue = noParse(TrackedValues[name].memValue)
-        end
-    end
-    if TrackedValues.hp.memValue and TrackedValues.hpMax.memValue then
-        TrackedValues.hp.parsedValue = parseWithMax(TrackedValues.hp.memValue, TrackedValues.hpMax.memValue)
-    end
-    if TrackedValues.mp.memValue and TrackedValues.mpMax.memValue then
-        TrackedValues.mp.parsedValue = parseWithMax(TrackedValues.mp.memValue, TrackedValues.mpMax.memValue)
-    end
-    if TrackedValues.map.memValue then
-        TrackedValues.map.parsedValue = parseMap(TrackedValues.map.memValue)
-    end
-    if TrackedValues.items.memValue then
-        TrackedValues.items.parsedValue = parseItems(TrackedValues.items.memValue)
-    end
-    if TrackedValues.spells.memValue and TrackedValues.quest.memValue then
-        TrackedValues.spells.parsedValue = parseSpells(TrackedValues.spells.memValue, TrackedValues.quest.memValue)
-    end
-    if TrackedValues.quest.memValue and TrackedValues.quest2.memValue and TrackedValues.quest3.memValue then
-        TrackedValues.quest.parsedValue = parseQuestProgress(
-            TrackedValues.quest.memValue,
-            TrackedValues.quest2.memValue,
-            TrackedValues.quest3.memValue
-        )
-    end
-    if TrackedValues.equipment.memValue then
-        TrackedValues.equipment.parsedValue = parseEquipment(TrackedValues.equipment.memValue)
-    end
+local function parseQuestProgress(questByte1, questByte2, questByte3)
+    return {
+        left_throne_room = questByte2 and bit.band(8, questByte2) > 0 or false,
+        green_dragon_trap = questByte3 and bit.band(2, questByte3) > 0 or false,
+        golem_trap = questByte3 and bit.band(2, questByte3) > 0 or false,
+        princess_rescued = questByte2 and bit.band(1, questByte2) > 0 or false,
+        princess_returned = questByte2 and bit.band(2, questByte2) > 0 or false,
+        rainbow_bridge = questByte1 and bit.band(8, questByte1) > 0 or false,
+        charlock_stairs = questByte1 and bit.band(4, questByte1) > 0 or false,
+        defeated_dragonlord = questByte3 and bit.band(64, questByte3) > 0 or false
+    }
 end
 
 return {
+    parseMap = parseMap,
     parseStats = parseStats,
     parseEquipped = parseEquipped,
     parseEquipment = parseEquipment,
+    parseQuestProgress = parseQuestProgress,
     parseQuestItems = parseQuestItems,
+    parseItems = parseItems,
     parseSpells = parseSpells,
-    parseAll = parseAll,
 }

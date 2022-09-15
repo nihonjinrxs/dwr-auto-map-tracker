@@ -28,6 +28,15 @@ local Data = {
             armor = nil,
             shield = nil,
         },
+        quest_progress = {
+            left_throne_room = false,
+            green_dragon_trap = false,
+            golem_trap = false,
+            princess_rescued = false,
+            princess_returned = false,
+            rainbow_bridge = false,
+            charlock_stairs = false,
+        },
         quest_items = {
             dragon_scale = false,
             fighter_ring = false,
@@ -92,6 +101,14 @@ local function updateHeroEquipment(TrackedValues)
     return parsers.parseEquipment(TrackedValues.equipment.memValue)
 end
 
+local function updateHeroQuestProgress(TrackedValues)
+    return parsers.parseQuestProgress(
+        TrackedValues.quest.memvValue,
+        TrackedValues.quest2.memValue,
+        TrackedValues.quest3.memValue
+    )
+end
+
 local function updateHeroQuestItems(TrackedValues)
     return parsers.parseQuestItems(TrackedValues)
 end
@@ -103,14 +120,10 @@ local function updateHeroEquipped(TrackedValues)
 end
 
 local function updateHeroItems(TrackedValues)
-    return {
-        magic_key = 0,
-        herb = 0,
-        torch = 0,
-        wings = 0,
-        fairy_water = 0,
-        cursed_belt = 0,
-    }
+    return parsers.parseItems(
+        TrackedValues.items.memValue,
+        TrackedValues.keys.memValue
+    )
 end
 
 local function updateHeroSpells(TrackedValues)
@@ -125,6 +138,7 @@ local function updateHeroData(TrackedValues)
         stats = updateHeroStats(TrackedValues),
         gold = 0,
         equipment = updateHeroEquipment(TrackedValues),
+        quest_progress = updateHeroQuestProgress(TrackedValues),
         quest_items = updateHeroQuestItems(TrackedValues),
         equipped = updateHeroEquipped(TrackedValues),
         items = updateHeroItems(TrackedValues),
@@ -132,12 +146,10 @@ local function updateHeroData(TrackedValues)
     }
 end
 
-local function updateData(TrackedValues)
-    return {
-        map = updateMapData(TrackedValues),
-        game = updateGameData(TrackedValues),
-        hero = updateHeroData(TrackedValues),
-    }
+local function updateData(TrackedValues, dataTable)
+    dataTable.map = updateMapData(TrackedValues)
+    dataTable.game = updateGameData(TrackedValues)
+    dataTable.hero = updateHeroData(TrackedValues)
 end
 
 return {
