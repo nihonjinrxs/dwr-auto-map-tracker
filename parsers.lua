@@ -29,7 +29,7 @@ end
 
 local function getItemsFromBytes(itemBytes)
     local working = {
-        herb = 0,
+        _herbs = 0,
         torch = 0,
         wings = 0,
         fairy_water = 0,
@@ -68,24 +68,24 @@ local function getItemsFromBytes(itemBytes)
     return working
 end
 
-local function parseAllItems(itemBytes, keysByte)
+local function parseAllItems(itemBytes, keysByte, herbsByte)
     local item_set = getItemsFromBytes(itemBytes)
     local quest_items = {
-        dragon_scale = item_set.dragon_scale > 0,
-        fighter_ring = item_set.fighter_ring > 0,
-        death_necklace = item_set.death_necklace > 0,
-        gwaelin_love = item_set.gwaelin_love > 0,
-        erdrick_token = item_set.erdrick_token > 0,
-        silver_harp = item_set.silver_harp > 0,
-        fairy_flute = item_set.fairy_flute > 0,
-        stones_of_sunlight = item_set.stones_of_sunlight > 0,
-        staff_of_rain = item_set.staff_of_rain > 0,
-        rainbow_drop = item_set.rainbow_drop > 0,
-        ball_of_light = item_set.ball_of_light > 0,
+        dragon_scale = item_set.dragon_scale and item_set.dragon_scale > 0,
+        fighter_ring = item_set.fighter_ring and item_set.fighter_ring > 0,
+        death_necklace = item_set.death_necklace and item_set.death_necklace > 0,
+        gwaelin_love = item_set.gwaelin_love and item_set.gwaelin_love > 0,
+        erdrick_token = item_set.erdrick_token and item_set.erdrick_token > 0,
+        silver_harp = item_set.silver_harp and item_set.silver_harp > 0,
+        fairy_flute = item_set.fairy_flute and item_set.fairy_flute > 0,
+        stones_of_sunlight = item_set.stones_of_sunlight and item_set.stones_of_sunlight > 0,
+        staff_of_rain = item_set.staff_of_rain and item_set.staff_of_rain > 0,
+        rainbow_drop = item_set.rainbow_drop and item_set.rainbow_drop > 0,
+        ball_of_light = item_set.ball_of_light and item_set.ball_of_light > 0,
     }
     local items = {
         magic_key = keysByte or 0,
-        herb = 0,
+        herb = herbsByte or 0,
         torch = item_set.torch,
         wings = item_set.wings,
         fairy_water = item_set.fairy_water,
@@ -100,12 +100,12 @@ end
 
 local function parseQuestItems(itemBytes)
     local all_items = parseAllItems(itemBytes, 0)
-    return all_items.items
+    return all_items.quest_items
 end
 
-local function parseItems(itemBytes, keysByte)
-    local all_items = parseAllItems(itemBytes, keysByte)
-    return all_items.quest_items
+local function parseItems(itemBytes, keysByte, herbsByte)
+    local all_items = parseAllItems(itemBytes, keysByte, herbsByte)
+    return all_items.items
 end
 
 local function parseSpells(byte1, byte2)

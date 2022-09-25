@@ -18,7 +18,7 @@ local function generatePrintablesLeft(data)
     pl[#pl + 1] = string.format(" Level  % 5d", data.hero.stats.level)
     pl[#pl + 1] = string.format(" XP     % 5d", data.hero.stats.xp)
     pl[#pl + 1] = string.format(" HP % 3d / % 3d", data.hero.stats.hp, data.hero.stats.hpMax)
-    pl[#pl + 1] = string.format(" MP % 3d / % 3d", data.hero.stats.mp. data.hero.stats.mpMax)
+    pl[#pl + 1] = string.format(" MP % 3d / % 3d", data.hero.stats.mp, data.hero.stats.mpMax)
     pl[#pl + 1] = string.format(" STR    % 5d", data.hero.stats.strength)
     pl[#pl + 1] = string.format(" AGI    % 5d", data.hero.stats.agility)
     pl[#pl + 1] = string.format(" AP     % 5d", data.hero.stats.attack)
@@ -30,33 +30,31 @@ local function generatePrintablesLeft(data)
     pl[#pl + 1] = string.format(" S %s", data.hero.equipment.shield or "")
     pl[#pl + 1] = "Equipped Items"
     local equipped_items = " "
-    if data.hero.equipped.dragon_scale then equipped_items = equipped_items.."DScl" end
-    if data.hero.equipped.fighter_ring then equipped_items = equipped_items.."FRng" end
-    if data.hero.equipped.death_necklace then equipped_items = equipped_items.."DthN" end
-    if data.hero.equipped.cursed_belt then equipped_items = equipped_items.."CBlt" end
+    if data.hero.equipped.dragon_scale then equipped_items = equipped_items.." DScl" end
+    if data.hero.equipped.fighter_ring then equipped_items = equipped_items.." FRng" end
+    if data.hero.equipped.death_necklace then equipped_items = equipped_items.." DthN" end
+    if data.hero.equipped.cursed_belt then equipped_items = equipped_items.." CBlt" end
+    pl[#pl + 1] = equipped_items
     pl[#pl + 1] = "Quest Items"
     local quest_items = " "
-    if data.here.quest_items.dragon_scale then quest_items = quest_items.."DScl" end
-    if data.here.quest_items.fighter_ring then quest_items = quest_items.."FRng" end
-    if data.here.quest_items.death_necklace then quest_items = quest_items.."DthN" end
-    if data.here.quest_items.gwaelin_love then quest_items = quest_items.."GwPS" end
-    if data.here.quest_items.erdrick_token then quest_items = quest_items.."Tokn" end
-    if data.here.quest_items.silver_harp then quest_items = quest_items.."Harp" end
-    if data.here.quest_items.stones_of_sunlight then quest_items = quest_items.."SSun" end
-    if data.here.quest_items.staff_of_rain then quest_items = quest_items.."Rain" end
-    if data.here.quest_items.rainbow_drop then quest_items = quest_items.."Drop" end
-    if data.here.quest_progress.rainbow_bridge then quest_items = quest_items.."RbBr" end
-    if data.here.quest_items.ball_of_light then quest_items = quest_items.."Ball" end
+    if data.hero.quest_items.dragon_scale then quest_items = quest_items.." DScl" end
+    if data.hero.quest_items.fighter_ring then quest_items = quest_items.." FRng" end
+    if data.hero.quest_items.death_necklace then quest_items = quest_items.." DthN" end
+    if data.hero.quest_items.gwaelin_love then quest_items = quest_items.." GwPS" end
+    if data.hero.quest_items.erdrick_token then quest_items = quest_items.." Tokn" end
+    if data.hero.quest_items.silver_harp then quest_items = quest_items.." Harp" end
+    if data.hero.quest_items.stones_of_sunlight then quest_items = quest_items.." SSun" end
+    if data.hero.quest_items.staff_of_rain then quest_items = quest_items.." Rain" end
+    if data.hero.quest_items.rainbow_drop then quest_items = quest_items.." Drop" end
+    if data.hero.quest_progress.rainbow_bridge then quest_items = quest_items.." RbBr" end
+    if data.hero.quest_items.ball_of_light then quest_items = quest_items.." Ball" end
+    pl[#pl + 1] = quest_items
     return pl
 end
 
 local function generatePrintablesRight(data)
-    local romData = game.getROMInfo()
-    local pl = {
-        "ROM Name: "..romData.filename,
-        "ROM Hash: "..romData.hash,
-    }
-    if not data.map.id then
+    local pl = {}
+    if not data.hero.items.herb then
         return pl
     end
     pl[#pl + 1] = "Spells"
@@ -71,12 +69,12 @@ local function generatePrintablesRight(data)
     pl[#pl + 1] = string.format(" %s HEALMORE  ", data.hero.spells.HEALMORE and "+" or " ")
     pl[#pl + 1] = string.format(" %s HURTMORE  ", data.hero.spells.HURTMORE and "+" or " ")
     pl[#pl + 1] = "Items"
-    pl[#pl + 1] = string.format(" Key         %d", data.hero.items.magic_key)
-    pl[#pl + 1] = string.format(" Herb        %d", data.hero.items.herb)
-    pl[#pl + 1] = string.format(" Torch       %d", data.hero.items.torch)
-    pl[#pl + 1] = string.format(" Wings       %d", data.hero.items.wings)
-    pl[#pl + 1] = string.format(" Fairy Water %d", data.hero.items.fairy_water)
-    pl[#pl + 1] = string.format(" Cursed Belt %d", data.hero.items.cursed_belt)
+    pl[#pl + 1] = string.format(" Key         %d", data.hero.items.magic_key or 0)
+    pl[#pl + 1] = string.format(" Herb        %d", data.hero.items.herb or 0)
+    pl[#pl + 1] = string.format(" Torch        %d", data.hero.items.torch or 0)
+    pl[#pl + 1] = string.format(" Wings        %d", data.hero.items.wings or 0)
+    pl[#pl + 1] = string.format(" Fairy Water   %d", data.hero.items.fairy_water or 0)
+    pl[#pl + 1] = string.format(" Cursed Belt   %d", data.hero.items.cursed_belt or 0)
     return pl
 end
 

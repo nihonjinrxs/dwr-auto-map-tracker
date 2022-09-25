@@ -110,7 +110,9 @@ local function updateHeroQuestProgress(TrackedValues)
 end
 
 local function updateHeroQuestItems(TrackedValues)
-    return parsers.parseQuestItems(TrackedValues)
+    return parsers.parseQuestItems(
+        TrackedValues.items.memValue
+    )
 end
 
 local function updateHeroEquipped(TrackedValues)
@@ -122,7 +124,8 @@ end
 local function updateHeroItems(TrackedValues)
     return parsers.parseItems(
         TrackedValues.items.memValue,
-        TrackedValues.keys.memValue
+        TrackedValues.keys.memValue,
+        TrackedValues.herbs.memValue
     )
 end
 
@@ -136,7 +139,7 @@ end
 local function updateHeroData(TrackedValues)
     return {
         stats = updateHeroStats(TrackedValues),
-        gold = 0,
+        gold = TrackedValues.gold.memValue or 0,
         equipment = updateHeroEquipment(TrackedValues),
         quest_progress = updateHeroQuestProgress(TrackedValues),
         quest_items = updateHeroQuestItems(TrackedValues),
