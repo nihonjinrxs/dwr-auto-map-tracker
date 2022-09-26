@@ -6,13 +6,13 @@ emu.speedmode("normal")
 local game = require "game"
 local data = require "data"
 local display = require "display"
--- local tracker_gui = require "tracker_gui"
+local tracker_gui = require "tracker_gui"
 
 -- Declare variables to track
 DWRAutoMapTracker.Trackables = game.Trackables
 DWRAutoMapTracker.TrackedValues = {}
 
--- DWRAutoMapTracker.UI = tracker_gui.initUI()
+tracker_gui.initUI()
 
 -- Start emulator loop
 local dataTable = data.Data
