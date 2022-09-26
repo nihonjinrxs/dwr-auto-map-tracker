@@ -56,5 +56,7 @@ end
 
 return {
     data = data,
+    height = #data - 1,
+    width = #(data[1]),
     updateMapExplored = updateMapExplored,
 }
