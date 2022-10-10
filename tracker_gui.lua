@@ -2,6 +2,7 @@ require 'auxlib'
 
 local data = require 'data'
 local map = require 'map'
+local imageUtils = require 'image_utils'
 
 local MAP_DISPLAY_SCALER = 2
 
@@ -123,5 +124,6 @@ function initUI()
 end
 
 return {
-    initUI = initUI
+    initUI = initUI,
+    updateUI = updateUI
 }

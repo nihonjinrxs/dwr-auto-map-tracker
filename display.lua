@@ -1,16 +1,16 @@
 local game = require('game')
-local data = require('data')
-
-local function withMax(value, maxValue)
-    return string.format("%d / %d", value, maxValue)
-end
+-- local imageUtils = require('image_utils')
+-- local gd = require('gd')
 
 local function generatePrintablesLeft(data)
-    local romData = game.getROMInfo()
+    -- local romData = game.getROMInfo()
     local pl = {
-        "ROM Name: "..romData.filename,
-        "ROM Hash: "..romData.hash,
+        -- "ROM Name: "..romData.filename,
+        -- "ROM Hash: "..romData.hash,
     }
+    if not data.map then
+        return pl
+    end
     if not data.map.id then
         return pl
     end
@@ -54,6 +54,9 @@ end
 
 local function generatePrintablesRight(data)
     local pl = {}
+    if not data.hero then
+        return pl
+    end
     if not data.hero.items.herb then
         return pl
     end
@@ -79,14 +82,16 @@ local function generatePrintablesRight(data)
 end
 
 local function displayOSD(data)
-    print("")
-    print("")
+    local textColor = "#CCEE00FF"
+    local bgColor = "#00000066"
+    -- print("")
+    -- print("")
     local leftSide = generatePrintablesLeft(data)
     local textX = game.screenDimensions.minX + 2
     local textY = game.screenDimensions.minY + 2
     local printablesCount = #(leftSide)
     for i = 1,printablesCount do
-        gui.text(textX, textY, leftSide[i])
+        gui.text(textX, textY, leftSide[i], textColor, bgColor)
         textY = textY + 10
     end
     local rightSide = generatePrintablesRight(data)
@@ -94,9 +99,61 @@ local function displayOSD(data)
     local textY = game.screenDimensions.minY + 2
     local printablesCount = #(rightSide)
     for i = 1,printablesCount do
-        gui.text(textX, textY, rightSide[i])
+        gui.text(textX, textY, rightSide[i], textColor, bgColor)
         textY = textY + 10
     end
+
+    -- local maxX = 255
+    -- local maxY = 231
+    -- local weaponImageFile = imageUtils.getWeaponImage(data.hero.equipment.weapon)
+    -- if (weaponImageFile) then
+    --     local gdstr = gd.createFromPng(weaponImageFile):gdStr()
+    --     gui.gdoverlay(5, maxY - 35, gdstr)
+    -- end
+    -- local armorImageFile = imageUtils.getArmorImage(data.hero.equipment.armor)
+    -- if (armorImageFile) then
+    --     local gdstr = gd.createFromPng(armorImageFile):gdStr()
+    --     gui.gdoverlay(40, maxY - 35, gdstr)
+    -- end
+    -- local shieldImageFile = imageUtils.getShieldImage(data.hero.equipment.shield)
+    -- if (shieldImageFile) then
+    --     local gdstr = gd.createFromPng(shieldImageFile):gdStr()
+    --     gui.gdoverlay(75, maxY - 35, gdstr)
+    -- end
+end
+
+local mapModule = require('map')
+
+local function displayMap(map)
+    local maxX = 255
+    local maxY = 231
+    if (not map.width) then
+        map.width = 120
+    end
+    if (not map.height) then
+        map.height = 120
+    end
+    local topLeft = { x = maxX-map.width-1, y = maxY-map.height-1 }
+    gui.drawrect(topLeft.x+1, topLeft.y+1, topLeft.x+map.width+1, topLeft.y+map.height+1, "#00000066", "#CCEE00FF")
+
+    local pixels = mapModule.generateMapWithExplored(map)
+    -- print(pixels)
+    local x = 0
+    local y = 0
+    for i = 1, map.width*map.height, 1 do
+        if pixels[i] and pixels[i] > 0 then
+            x = math.floor(i / map.width)
+            y = i % map.width
+            gui.drawpixel(x, y, map.colors[map.pixels[i]])
+        else
+            gui.drawpixel(x, y, "#33663366")
+        end
+        -- if pixels[i] == 0 then
+        --     gui.drawpixel(x, y, "#33663366")
+        -- else
+        --     gui.drawpixel(x, y, "#CCAAEEFF")
+        -- end
+end
 end
 
 --Produces a compact, uncluttered representation of a table. Mutual recursion is employed
@@ -141,5 +198,6 @@ end
 
 return {
     displayOSD = displayOSD,
+    displayMap = displayMap,
     logValues = logValues,
 }

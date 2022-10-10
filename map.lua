@@ -1,62 +1,106 @@
-local function generateMapData()
-    -- TODO: replace with data read from ROM
+local lookups = require 'lookups'
+
+local function coordsToPixelIndex(width, x, y)
+    return ((width or 120) * y) + x + 1
+end
+
+local function readRLEMapPixels(width, height)
+    local totalPixels = (width or 120) * (height or 120)
+    local pixels = {}
+    local currentAddr = 0x1A56
+    local currentByte = 0x00
+    local tile = 0x0
+    local count = 0x0
+    local i = 1
+    local k = 1
+
+    print("Reading map from ROM...")
+    while i < totalPixels do
+        currentByte = rom.readbyte(currentAddr)
+        tile = bit.rshift(currentByte, 4)
+        count = bit.band(currentByte, 0xF)
+        for k = 1, count, 1 do
+            pixels[i] = lookups.overworldTilePixelValues[lookups.overworldTiles[tile]]
+            i = i + 1
+        end
+        currentAddr = currentAddr + 0x1
+    end
+
+    print(pixels)
+    print("Completed reading map from ROM.")
+    return pixels
+end
+
+local function generateMapData(width, height)
     return {
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}; -- note that this ; is NOT the end of the command but a mere seperator, equivalent to a comma (,)
-        colors =
-            {
-                "0 0 0",       -- 1 = black  = unknown
-                "196 196 196", -- 2 = grey   = mountain
-                "128 0 240",   -- 3 = purple = swamp
-                "240 188 60",  -- 4 = orange = hills
-                "252 228 160", -- 5 = yellow = desert
-                "76 220 72",   -- 6 = green  = grass
-                "32 56 236",   -- 7 = blue   = water
-                "216 40 0",    -- 8 = red    = point of interest
-                "BGCOLOR"      -- 9 (changed because of Lua index starts at 1)
-            }
+        width = width,
+        height = height,
+        pixels = readRLEMapPixels(width, height),
+        colors = lookups.overworldPixelColorMapping,
     }
 end
 
-local data = generateMapData()
+local function generateMapExplored(width, height)
+    local explored = {}
+    -- for i = 1, width * height, 1 do
+    --     explored[i] = 0
+    -- end
+    return explored
+end
 
-local function updateMapExplored(TrackedValues)
-    return {}
+local data = generateMapData(
+    (_G.DWRAutoMapTracker.AllData and _G.DWRAutoMapTracker.AllData.map.width) or 120,
+    (_G.DWRAutoMapTracker.AllData and _G.DWRAutoMapTracker.AllData.map.height) or 120
+)
+local explored = generateMapExplored(
+    (_G.DWRAutoMapTracker.AllData and _G.DWRAutoMapTracker.AllData.map.width) or 120,
+    (_G.DWRAutoMapTracker.AllData and _G.DWRAutoMapTracker.AllData.map.height) or 120
+)
+
+local function updateMapExplored(AllData)
+    -- print(AllData.player, AllData.map.width, AllData.map.height)
+    if AllData.player and AllData.map.explored then
+        local left = math.max(AllData.player.position.x - 7, 0)
+        local right = math.min(AllData.player.position.x + 7, AllData.map.width or 120)
+        local top = math.max(AllData.player.position.y - 7, 0)
+        local bottom = math.min(AllData.player.position.y + 7, AllData.map.height or 120)
+        -- print(string.format(
+        --     "upd expl: p(%d,%d), >(%d,%d), v(%d,%d)",
+        --     AllData.player.position.x, AllData.player.position.y, left, right, top, bottom
+        -- ))
+        local i = 0
+        for x = left,right,1 do
+            for y = top,bottom,1 do
+                i = coordsToPixelIndex(AllData.map.width, x, y)
+                -- print(string.format("(%d,%d) -> %d", x, y, i))
+                AllData.map.explored[i] = 1
+            end
+        end
+        -- print(AllData.map.explored)
+        return AllData.map.explored
+    else
+        return generateMapExplored(AllData.map.width, AllData.map.height)
+    end
+end
+
+local function generateMapWithExplored(map)
+    local displayMap = {
+        width = map.data.width,
+        height = map.data.height,
+        pixels = {},
+        colors = map.data.colors,
+    }
+    for i = 1, map.data.width * map.data.height, 1 do
+        displayMap.pixels[i] = (map.data.pixels[i] or 4) * (map.explored[i] or 0)
+    end
+    return displayMap
 end
 
 return {
     data = data,
     height = #data - 1,
     width = #(data[1]),
+    explored = explored,
     updateMapExplored = updateMapExplored,
+    generateMapWithExplored = generateMapWithExplored,
 }

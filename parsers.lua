@@ -4,6 +4,19 @@ local function parseMap(mapByte)
     return lookups.maps[mapByte]
 end
 
+local function parsePlayerData(TrackedValues)
+    return {
+        position = {
+            x = TrackedValues.playerX.memValue or 0,
+            y = TrackedValues.playerY.memValue or 0,
+        },
+        alt = {
+            h = TrackedValues.playerH.memValue or 0,
+            v = TrackedValues.playerV.memValue or 0,
+        },
+    }
+end
+
 local function parseStats(TrackedValues)
     return {
         xp = TrackedValues.xp.memValue or 0,
@@ -147,6 +160,7 @@ end
 
 return {
     parseMap = parseMap,
+    parsePlayerData = parsePlayerData,
     parseStats = parseStats,
     parseEquipped = parseEquipped,
     parseEquipment = parseEquipment,

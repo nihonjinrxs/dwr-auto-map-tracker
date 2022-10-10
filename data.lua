@@ -1,13 +1,17 @@
 local parsers = require "parsers"
-local map = require "map"
 
 local Data = {
     map = {
         id = nil,
         explored = {},
+        data = {},
     },
     game = {
         rng_state = 0,
+    },
+    player = {
+        position = {x = 0, y = 0},
+        alt = {h = 0, v = 0},
     },
     hero = {
         stats = {
@@ -79,18 +83,23 @@ local Data = {
     },
 }
 
-local function updateMapData(TrackedValues)
+local function updateMapData(TrackedValues, AllData)
+    local map = require('map')
     return {
         id = parsers.parseMap(TrackedValues.map.memValue) or nil,
-        explored = map.updateMapExplored(TrackedValues),
+        explored = map.updateMapExplored(AllData),
+        data = map.data,
     }
 end
 
 local function updateGameData(TrackedValues)
     return {
-        -- TODO: implement this
-        rng_state = 0,
+        rng_state = TrackedValues.rngState.memValue or 0,
     }
+end
+
+local function updatePlayerData(TrackedValues)
+    return parsers.parsePlayerData(TrackedValues)
 end
 
 local function updateHeroStats(TrackedValues)
@@ -149,10 +158,11 @@ local function updateHeroData(TrackedValues)
     }
 end
 
-local function updateData(TrackedValues, dataTable)
-    dataTable.map = updateMapData(TrackedValues)
-    dataTable.game = updateGameData(TrackedValues)
-    dataTable.hero = updateHeroData(TrackedValues)
+local function updateData(TrackedValues, AllData)
+    AllData.map = updateMapData(TrackedValues, AllData)
+    AllData.game = updateGameData(TrackedValues)
+    AllData.player = updatePlayerData(TrackedValues)
+    AllData.hero = updateHeroData(TrackedValues)
 end
 
 return {

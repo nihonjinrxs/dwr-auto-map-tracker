@@ -35,6 +35,61 @@ local maps = {
     [0x1D] = "Erdrick's Cave B2",
 }
 
+-- "BGCOLOR",     -- 0 = background color
+-- "0 0 0",       -- 1 = black  = unknown
+-- "196 196 196", -- 2 = grey   = mountain
+-- "128 0 240",   -- 3 = purple = swamp
+-- "240 188 60",  -- 4 = orange = hills
+-- "252 228 160", -- 5 = yellow = desert
+-- "76 220 72",   -- 6 = green  = grass
+-- "32 56 236",   -- 7 = blue   = water
+-- "216 40 0",    -- 8 = red    = point of interest
+local overworldTiles = {
+    [0x0] = "Grass",
+    [0x1] = "Sand",
+    [0x2] = "Hill",
+    [0x3] = "Mountain",
+    [0x4] = "Water",
+    [0x5] = "Block",
+    [0x6] = "Forest",
+    [0x7] = "Swamp",
+    [0x8] = "Town",
+    [0x9] = "Cave",
+    [0xA] = "Castle",
+    [0xB] = "Bridge",
+    [0xC] = "Stairs",
+}
+
+local overworldTilePixelValues = {
+    ["Unknown"] = 1,  -- "0 0 0"       = black   = $0F
+    ["Mountain"] = 2, -- "196 196 196" = grey    = $3D
+    ["Swamp"] = 3,    -- "128 0 240"   = purple  = $13
+    ["Hill"] = 4,     -- "240 188 60"  = orange  = $28
+    ["Sand"] = 5,     -- "252 228 160" = yellow  = $38
+    ["Grass"] = 6,    -- "76 220 72"   = green   = $2A
+    ["Water"] = 7,    -- "32 56 236"   = blue    = $12
+    ["Forest"] = 8,   -- "0 144 56"    = dk grn  = $1B
+    ["Town"] = 9,     -- "216 40 0"    = red     = $16
+    ["Cave"] = 9,     -- "216 40 0"    = red     = $16
+    ["Castle"] = 9,   -- "216 40 0"    = red     = $16
+    ["Stairs"] = 9,   -- "216 40 0"    = red     = $16
+    ["Bridge"] = 10,  -- "252 252 252" = lt grey = $20
+    ["Block"] = 10,   -- "252 252 252" = lt grey = $20
+}
+
+local overworldPixelColorMapping = {
+    "0 0 0",       -- black   = $0F
+    "196 196 196", -- grey    = $3D
+    "128 0 240",   -- purple  = $13
+    "240 188 60",  -- orange  = $28
+    "252 228 160", -- yellow  = $38
+    "76 220 72",   -- green   = $2A
+    "32 56 236",   -- blue    = $12
+    "0 144 56",    -- dk grn  = $1B
+    "216 40 0",    -- red     = $16
+    "252 252 252", -- lt grey = $20
+}
+
 local items = {
     "torch",              -- 0x1
     "fairy_water",        -- 0x2
@@ -82,6 +137,9 @@ local shields = {
 return {
     nonParseables = nonParseables,
     maps = maps,
+    overworldTiles = overworldTiles,
+    overworldTilePixelValues = overworldTilePixelValues,
+    overworldPixelColorMapping = overworldPixelColorMapping,
     items = items,
     weapons = weapons,
     armor = armor,

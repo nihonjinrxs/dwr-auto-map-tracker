@@ -4,6 +4,9 @@
         "emu",
         "rom",
         "gui",
-        "bit"
+        "bit",
+        "iup",
+        "handles",
+        "dialogs"
     ]
 }
