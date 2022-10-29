@@ -42,9 +42,9 @@ end
 
 local function generateMapExplored(width, height)
     local explored = {}
-    -- for i = 1, width * height, 1 do
-    --     explored[i] = 0
-    -- end
+    for i = 1, width * height, 1 do
+        explored[i] = 0
+    end
     return explored
 end
 
@@ -83,23 +83,28 @@ local function updateMapExplored(AllData)
     end
 end
 
-local function generateMapWithExplored(map)
+local function generateMapWithExplored()
+    local width = _G.DWRAutoMapTracker.AllData.map.data.width or 120
+    local height = _G.DWRAutoMapTracker.AllData.map.data.height or 120
     local displayMap = {
-        width = map.data.width,
-        height = map.data.height,
+        width = width,
+        height = height,
         pixels = {},
-        colors = map.data.colors,
+        colors = _G.DWRAutoMapTracker.AllData.map.data.colors,
     }
-    for i = 1, map.data.width * map.data.height, 1 do
-        displayMap.pixels[i] = (map.data.pixels[i] or 4) * (map.explored[i] or 0)
+
+    local mapPixels = _G.DWRAutoMapTracker.AllData.map.data.pixels
+    local explored = _G.DWRAutoMapTracker.AllData.map.explored
+    for i = 1, width * height, 1 do
+        displayMap.pixels[i] = (mapPixels[i] or 4) * (explored[i] or 0)
     end
     return displayMap
 end
 
 return {
     data = data,
-    height = #data - 1,
-    width = #(data[1]),
+    height = (_G.DWRAutoMapTracker.AllData and _G.DWRAutoMapTracker.AllData.map.data.height) or 120,
+    width = (_G.DWRAutoMapTracker.AllData and _G.DWRAutoMapTracker.AllData.map.data.width) or 120,
     explored = explored,
     updateMapExplored = updateMapExplored,
     generateMapWithExplored = generateMapWithExplored,

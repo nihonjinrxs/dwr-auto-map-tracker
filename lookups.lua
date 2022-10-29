@@ -108,6 +108,38 @@ local items = {
     "herb_glitched",      -- 0xF
 }
 
+local levelXP = {
+    5,      --  2
+    17,     --  3
+    35,     --  4
+    82,     --  5
+    165,    --  6
+    337,    --  7
+    600,    --  8
+    975,    --  9
+    1500,   -- 10
+    2175,   -- 11
+    3000,   -- 12
+    4125,   -- 13
+    5625,   -- 14
+    7500,   -- 15
+    9750,   -- 16
+    12000,  -- 17
+    14250,  -- 18
+    16500,  -- 19
+    19500,  -- 20
+    22500,  -- 21
+    25500,  -- 22
+    28500,  -- 23
+    31500,  -- 24
+    34500,  -- 25
+    37500,  -- 26
+    40500,  -- 27
+    43500,  -- 28
+    46500,  -- 29
+    49151   -- 30
+}
+
 local weapons = {
     [0x20] = "Bamboo Pole",
     [0x40] = "Club",
@@ -140,6 +172,7 @@ return {
     overworldTiles = overworldTiles,
     overworldTilePixelValues = overworldTilePixelValues,
     overworldPixelColorMapping = overworldPixelColorMapping,
+    levelXP = levelXP,
     items = items,
     weapons = weapons,
     armor = armor,

@@ -1,4 +1,5 @@
 local game = require('game')
+local lookups = require('lookups')
 -- local imageUtils = require('image_utils')
 -- local gd = require('gd')
 
@@ -16,7 +17,11 @@ local function generatePrintablesLeft(data)
     end
     pl[#pl + 1] = "Hero Stats"
     pl[#pl + 1] = string.format(" Level  % 5d", data.hero.stats.level)
-    pl[#pl + 1] = string.format(" XP     % 5d", data.hero.stats.xp)
+    if data.hero.stats.level < 30 then
+        pl[#pl + 1] = string.format(" XP % 5d / %d", data.hero.stats.xp, lookups.levelXP[data.hero.stats.level])
+    else
+        pl[#pl + 1] = string.format(" XP     % 5d", data.hero.stats.xp)
+    end
     pl[#pl + 1] = string.format(" HP % 3d / % 3d", data.hero.stats.hp, data.hero.stats.hpMax)
     pl[#pl + 1] = string.format(" MP % 3d / % 3d", data.hero.stats.mp, data.hero.stats.mpMax)
     pl[#pl + 1] = string.format(" STR    % 5d", data.hero.stats.strength)
@@ -124,9 +129,10 @@ end
 
 local mapModule = require('map')
 
-local function displayMap(map)
+local function displayMap()
     local maxX = 255
     local maxY = 231
+    local map = _G.DWRAutoMapTracker.AllData.map
     if (not map.width) then
         map.width = 120
     end
@@ -136,7 +142,7 @@ local function displayMap(map)
     local topLeft = { x = maxX-map.width-1, y = maxY-map.height-1 }
     gui.drawrect(topLeft.x+1, topLeft.y+1, topLeft.x+map.width+1, topLeft.y+map.height+1, "#00000066", "#CCEE00FF")
 
-    local pixels = mapModule.generateMapWithExplored(map)
+    local pixels = mapModule.generateMapWithExplored()
     -- print(pixels)
     local x = 0
     local y = 0
