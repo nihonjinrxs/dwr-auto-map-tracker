@@ -126,7 +126,7 @@ end
 local function parseEquipped(byteValue)
     return {
         dragon_scale = byteValue and bit.band(16, byteValue) > 0 or false,
-        figher_ring = byteValue and bit.band(32, byteValue) > 0 or false,
+        fighter_ring = byteValue and bit.band(32, byteValue) > 0 or false,
         cursed_belt = byteValue and bit.band(64, byteValue) > 0 or false,
         death_necklace = byteValue and bit.band(128, byteValue) > 0 or false,
     }
